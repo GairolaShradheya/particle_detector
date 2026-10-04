@@ -3,7 +3,8 @@ const r = require("raylib");
 const SCREEN_WIDTH = 1920;
 const SCREEN_HEIGHT = 1000;
 
-let scannerPosX = 1;
+let scannerStart = 1;
+const scannerWidth = 50;
 let velocity = 7;
 
 function setup() {
@@ -12,21 +13,33 @@ function setup() {
 }
 
 function update() {
-    if (scannerPosX <= 0 || scannerPosX >= SCREEN_WIDTH) {
+    if (scannerStart <= 0 || scannerStart >= SCREEN_WIDTH-scannerWidth) {
         velocity *= -1;
     }
-    scannerPosX += velocity;
+    scannerStart += velocity;
+}
+
+function areOverlapping(range1Start,range1Width,range2Start,range2Width){
+    if (((range2Start-range1Start) >= range1Width) || ((range1Start-range2Start) > range2Width)){
+        return false
+    }
+    return true;
+}
+
+function chooseColour(range1Start,range1Width,range2Start,range2Width){
+    return areOverlapping(range1Start,range1Width,range2Start,range2Width) ? r.RED : r.WHITE;
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
     
-    const particleFieldStart = 600;
-    const particleFieldWidth = 100;
+    const particleFieldStart = 700;
+    const particleFieldWidth = 600;
+    const scannerColour = chooseColour(scannerStart,scannerWidth,particleFieldStart,particleFieldWidth);
 
     r.DrawRectangle(particleFieldStart, 0, particleFieldWidth, SCREEN_HEIGHT, r.BLUE);
-    r.DrawRectangle(scannerPosX, 0, 30, SCREEN_HEIGHT, r.WHITE);
+    r.DrawRectangle(scannerStart, 0, scannerWidth, SCREEN_HEIGHT, scannerColour);
 
     r.EndDrawing();
 }
