@@ -12,3 +12,5 @@ function main(){
     loop();
     sketch.tearDown();
 }
+
+main();
