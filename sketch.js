@@ -3,8 +3,8 @@ const r = require("raylib");
 const SCREEN_WIDTH = 1920;
 const SCREEN_HEIGHT = 1000;
 
-let rectPosX = 1;
-let velocity = 10;
+let scannerPosX = 1;
+let velocity = 7;
 
 function setup() {
     r.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Particle Detector");
@@ -12,17 +12,21 @@ function setup() {
 }
 
 function update() {
-    if (rectPosX <= 0 || rectPosX >= SCREEN_WIDTH) {
+    if (scannerPosX <= 0 || scannerPosX >= SCREEN_WIDTH) {
         velocity *= -1;
     }
-    rectPosX += velocity;
+    scannerPosX += velocity;
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
+    
+    const particleFieldStart = 600;
+    const particleFieldWidth = 100;
 
-    r.DrawRectangle(rectPosX, 0, 30, SCREEN_HEIGHT, r.WHITE);
+    r.DrawRectangle(particleFieldStart, 0, particleFieldWidth, SCREEN_HEIGHT, r.BLUE);
+    r.DrawRectangle(scannerPosX, 0, 30, SCREEN_HEIGHT, r.WHITE);
 
     r.EndDrawing();
 }
