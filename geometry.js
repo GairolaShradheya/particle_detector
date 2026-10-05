@@ -40,6 +40,7 @@ function isAnyOneOverlapping(
 
 module.exports = {
     isAnyOneOverlapping,
+    areOverlapping,
     isOutOfBound,
     giveDirection,
 };
