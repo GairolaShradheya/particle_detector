@@ -1,27 +1,20 @@
-function isOutOfBound(scanStart, scanWidth, rangeStart, rangeEnd) {
-    return scanStart < rangeStart || scanStart >= rangeEnd - scanWidth;
+function isOutOfBound(scanner) {
+    const scanStart = scanner.horizontal ? scanner.position.startX : scanner.position.startY;
+    const scanThick = scanner.horizontal ? scanner.size.width : scanner.size.height;
+    return scanStart < scanner.range.start || scanStart >= scanner.range.end - scanThick;
 }
 
-function giveDirection(
-    scanStart,
-    scanWidth,
-    rangeStart,
-    rangeEnd,
-    scanVelocity,
-) {
-    return isOutOfBound(scanStart, scanWidth, rangeStart, rangeEnd)
-        ? -scanVelocity
-        : scanVelocity;
+function giveDirection(scanner) {
+    return isOutOfBound(scanner)
+        ? -scanner.velocity
+        : scanner.velocity;
 }
 
 function areOverlapping(rangeStart, rangeWidth, scanStart, scanWidth) {
-    if (
+    return !(
         rangeStart - scanStart >= scanWidth ||
         scanStart - rangeStart > rangeWidth
-    ) {
-        return false;
-    }
-    return true;
+    )
 }
 
 function isAnyOneOverlapping(

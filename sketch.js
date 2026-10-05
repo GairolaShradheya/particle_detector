@@ -4,20 +4,57 @@ const geometry = require("./geometry");
 const SCREEN_WIDTH = 1700;
 const SCREEN_HEIGHT = 1000;
 
-let firstScannerStart = 0;
-const firstScannerWidth = 30;
-const firstScannerEnd = SCREEN_WIDTH / 2;
-let firstScannerVelocity = 7;
+const firstScanner = {
+    position: {
+        startX: 0,
+        startY: 0,
+    },
+    size: {
+        width: 30,
+        height: SCREEN_HEIGHT,
+    },
+    range: {
+        start: 0,
+        end: SCREEN_WIDTH / 2,
+    },
+    velocity: 7,
+    horizontal: true,
+}
 
-let secondScannerStart = SCREEN_WIDTH / 2;
-const secondScannerWidth = 20;
-const secondScannerEnd = SCREEN_WIDTH;
-let secondScannerVelocity = 5;
+const secondScanner = {
+    position: {
+        startX: SCREEN_WIDTH / 2,
+        startY: 0,
+    },
+    size: {
+        width: 20,
+        height: SCREEN_HEIGHT,
+    },
+    range: {
+        start: SCREEN_WIDTH / 2,
+        end: SCREEN_WIDTH,
+    },
+    velocity: 5,
+    horizontal: true,
+}
 
-let thirdScannerStart = 0;
-const thirdScannerHeight = 20;
-const thirdScannerEnd = SCREEN_HEIGHT;
-let thirdScannerVelocity = 8;
+const thirdScanner = {
+    position: {
+        startX: 0,
+        startY: 0,
+    },
+    size: {
+        width: SCREEN_WIDTH,
+        height: 20,
+    },
+    range: {
+        start: 0,
+        end: SCREEN_HEIGHT,
+    },
+    velocity: 8,
+    horizontal: false,
+}
+
 
 function setup() {
     r.SetTraceLogLevel(r.LOG_ERROR);
@@ -26,131 +63,87 @@ function setup() {
 }
 
 function update() {
-    firstScannerVelocity = geometry.giveDirection(
-        firstScannerStart,
-        firstScannerWidth,
-        0,
-        firstScannerEnd,
-        firstScannerVelocity,
-    );
-    secondScannerVelocity = geometry.giveDirection(
-        secondScannerStart,
-        secondScannerWidth,
-        SCREEN_WIDTH / 2,
-        secondScannerEnd,
-        secondScannerVelocity,
-    );
-    thirdScannerVelocity = geometry.giveDirection(
-        thirdScannerStart,
-        thirdScannerHeight,
-        0,
-        thirdScannerEnd,
-        thirdScannerVelocity,
-    );
+    firstScanner.velocity = geometry.giveDirection(firstScanner);
+    secondScanner.velocity = geometry.giveDirection(secondScanner);
+    thirdScanner.velocity = geometry.giveDirection(thirdScanner);
 
-    firstScannerStart += firstScannerVelocity;
-    secondScannerStart += secondScannerVelocity;
-    thirdScannerStart += thirdScannerVelocity;
+    firstScanner.position.startX += firstScanner.velocity;
+    secondScanner.position.startX += secondScanner.velocity;
+    thirdScanner.position.startY += thirdScanner.velocity;
 }
 
 function chooseColour(decision) {
     return decision ? r.RED : r.WHITE;
 }
 
-function drawParticleField(fieldStartX, fieldStartY, fieldWidth, fieldHeight) {
-    r.DrawRectangle(fieldStartX, fieldStartY, fieldWidth, fieldHeight, r.BLUE);
+function drawParticleField(field) {
+    r.DrawRectangle(field.startX, field.startY, field.width, field.height, r.BLUE);
 }
 
-function drawScanner(
-    scanStartX,
-    scanStartY,
-    scanWidth,
-    scanHeight,
-    scanColour,
-) {
-    r.DrawRectangle(scanStartX, scanStartY, scanWidth, scanHeight, scanColour);
+function drawScanner(scanner) {
+    r.DrawRectangle(scanner.position.startX, scanner.position.startY, scanner.size.width, scanner.size.height, scanner.colour);
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    const firstParticleFieldStart = 300;
-    const firstParticleFieldWidth = 200;
-    const secondParticleFieldStart = 1100;
-    const secondParticleFieldWidth = 70;
-    const thirdParticleFieldStart = 600;
-    const thirdParticleFieldHeight = 50;
+    const firstParticleField = {
+        startX: 300,
+        startY: 0,
+        width: 200,
+        height: SCREEN_HEIGHT,
+    }
+    const secondParticleField = {
+        startX: 1100,
+        startY: 0,
+        width: 70,
+        height: SCREEN_HEIGHT,
+    }
+    const thirdParticleField = {
+        startX: 0,
+        startY: 600,
+        width: SCREEN_WIDTH,
+        height: 50,
+    }
 
-    const firstScannerColour = chooseColour(
+    firstScanner.colour = chooseColour(
         geometry.isAnyOneOverlapping(
-            firstParticleFieldStart,
-            firstParticleFieldWidth,
-            secondParticleFieldStart,
-            secondParticleFieldWidth,
-            firstScannerStart,
-            firstScannerWidth,
+            firstParticleField.startX,
+            firstParticleField.width,
+            secondParticleField.startX,
+            secondParticleField.width,
+            firstScanner.position.startX,
+            firstScanner.size.width,
         ),
     );
-    const secondScannerColour = chooseColour(
+    secondScanner.colour = chooseColour(
         geometry.isAnyOneOverlapping(
-            firstParticleFieldStart,
-            firstParticleFieldWidth,
-            secondParticleFieldStart,
-            secondParticleFieldWidth,
-            secondScannerStart,
-            secondScannerWidth,
+            firstParticleField.startX,
+            firstParticleField.width,
+            secondParticleField.startX,
+            secondParticleField.width,
+            secondScanner.position.startX,
+            secondScanner.size.width,
         ),
     );
-    const thirdScannerColour = chooseColour(
+    thirdScanner.colour = chooseColour(
         geometry.areOverlapping(
-            thirdParticleFieldStart,
-            thirdParticleFieldHeight,
-            thirdScannerStart,
-            thirdScannerHeight,
+            thirdParticleField.startY,
+            thirdParticleField.height,
+            thirdScanner.position.startY,
+            thirdScanner.size.height,
         ),
     );
 
-    drawParticleField(
-        firstParticleFieldStart,
-        0,
-        firstParticleFieldWidth,
-        SCREEN_HEIGHT,
-    );
-    drawParticleField(
-        secondParticleFieldStart,
-        0,
-        secondParticleFieldWidth,
-        SCREEN_HEIGHT,
-    );
-    drawParticleField(
-        0,
-        thirdParticleFieldStart,
-        SCREEN_WIDTH,
-        thirdParticleFieldHeight,
-    );
+    drawParticleField(firstParticleField);
+    drawParticleField(secondParticleField);
+    drawParticleField(thirdParticleField);
 
-    drawScanner(
-        firstScannerStart,
-        0,
-        firstScannerWidth,
-        SCREEN_HEIGHT,
-        firstScannerColour,
-    );
-    drawScanner(
-        secondScannerStart,
-        0,
-        secondScannerWidth,
-        SCREEN_HEIGHT,
-        secondScannerColour,
-    );
-    drawScanner(
-        0,
-        thirdScannerStart,
-        SCREEN_WIDTH,
-        thirdScannerHeight,
-        thirdScannerColour,
-    );
+    drawScanner(firstScanner);
+    drawScanner(secondScanner);
+    drawScanner(thirdScanner);
+
     r.EndDrawing();
 }
 
