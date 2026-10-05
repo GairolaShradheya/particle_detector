@@ -1,56 +1,55 @@
 const r = require("raylib");
+const geometry = require("./geometry");
 
 const SCREEN_WIDTH = 1700;
 const SCREEN_HEIGHT = 1000;
 
-let scannerStart = 1;
-const scannerWidth = 50;
-let velocity = 7;
+let firstScannerStart = 0;
+const firstScannerWidth = 50;
+const firstScannerEnd = SCREEN_WIDTH / 2;
+let firstScannerVelocity = 7;
+
+let secondScannerStart = SCREEN_WIDTH / 2;
+const secondScannerWidth = 50;
+const secondScannerEnd = SCREEN_WIDTH;
+let secondScannerVelocity = 4;
 
 function setup() {
     r.SetTraceLogLevel(r.LOG_ERROR);
     r.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Particle Detector");
     r.SetTargetFPS(60);
 }
-function isOutOfBound() {
-    return scannerStart <= 0 || scannerStart >= SCREEN_WIDTH - scannerWidth;
-}
 
 function update() {
-    if (isOutOfBound()) {
-        velocity *= -1;
-    }
-    scannerStart += velocity;
-}
+    firstScannerVelocity = geometry.giveDirection(
+        firstScannerStart,
+        firstScannerWidth,
+        0,
+        firstScannerEnd,
+        firstScannerVelocity,
+    );
+    secondScannerVelocity = geometry.giveDirection(
+        secondScannerStart,
+        secondScannerWidth,
+        SCREEN_WIDTH / 2,
+        secondScannerEnd,
+        secondScannerVelocity,
+    );
 
-function areOverlapping(rangeStart, rangeWidth) {
-    if (
-        rangeStart - scannerStart >= scannerWidth ||
-        scannerStart - rangeStart > rangeWidth
-    ) {
-        return false;
-    }
-    return true;
+    firstScannerStart += firstScannerVelocity;
+    secondScannerStart += secondScannerVelocity;
 }
 
 function chooseColour(decision) {
     return decision ? r.RED : r.WHITE;
 }
 
-function isAnyOneOverlapping(
-    range1Start,
-    range1Width,
-    range2Start,
-    range2Width,
-) {
-    return (
-        areOverlapping(range1Start, range1Width) ||
-        areOverlapping(range2Start, range2Width)
-    );
-}
-
 function drawParticleField(fieldStart, fieldWidth) {
     r.DrawRectangle(fieldStart, 0, fieldWidth, SCREEN_HEIGHT, r.BLUE);
+}
+
+function drawScanner(scanStart, scanWidth, scanColour) {
+    r.DrawRectangle(scanStart, 0, scanWidth, SCREEN_HEIGHT, scanColour);
 }
 
 function draw() {
@@ -62,26 +61,36 @@ function draw() {
     const secondParticleFieldStart = 1000;
     const secondParticleFieldWidth = 80;
 
-    const scannerColour = chooseColour(
-        isAnyOneOverlapping(
+    const firstScannerColour = chooseColour(
+        geometry.isAnyOneOverlapping(
             firstParticleFieldStart,
             firstParticleFieldWidth,
             secondParticleFieldStart,
             secondParticleFieldWidth,
+            firstScannerStart,
+            firstScannerWidth,
+        ),
+    );
+    const secondScannerColour = chooseColour(
+        geometry.isAnyOneOverlapping(
+            firstParticleFieldStart,
+            firstParticleFieldWidth,
+            secondParticleFieldStart,
+            secondParticleFieldWidth,
+            secondScannerStart,
+            secondScannerWidth,
         ),
     );
 
     drawParticleField(firstParticleFieldStart, firstParticleFieldWidth);
     drawParticleField(secondParticleFieldStart, secondParticleFieldWidth);
 
-    r.DrawRectangle(
-        scannerStart,
-        0,
-        scannerWidth,
-        SCREEN_HEIGHT,
-        scannerColour,
+    drawScanner(firstScannerStart, firstScannerWidth, firstScannerColour);
+    drawScanner(
+        secondScannerStart,
+        secondParticleFieldWidth,
+        secondScannerColour,
     );
-
     r.EndDrawing();
 }
 
