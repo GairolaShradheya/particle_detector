@@ -1,13 +1,10 @@
+const SCREEN_WIDTH = 1700;
+const SCREEN_HEIGHT = 1000;
+
 function isOutOfBound(scanner) {
-    const scanStart = scanner.horizontal
-        ? scanner.position.startX
-        : scanner.position.startY;
-    const scanThick = scanner.horizontal
-        ? scanner.size.width
-        : scanner.size.height;
     return (
-        scanStart < scanner.range.start ||
-        scanStart >= scanner.range.end - scanThick
+        scanner.start < scanner.rangeStart ||
+        scanner.start >= scanner.rangeEnd - scanner.thickness
     );
 }
 
@@ -33,4 +30,6 @@ module.exports = {
     areOverlapping,
     isOutOfBound,
     updateVelocity,
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
 };
