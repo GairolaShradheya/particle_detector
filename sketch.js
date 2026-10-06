@@ -6,18 +6,20 @@ const particle = require("./particle");
 const SCREEN_WIDTH = 1700;
 const SCREEN_HEIGHT = 1000;
 
-const firstScanner = scanner.getScanner(
-    0,
-    0,
-    30,
-    SCREEN_HEIGHT,
-    0,
-    SCREEN_WIDTH / 2,
-    7,
-    true,
-);
+// const firstScanner = scanner.createScanner(
+//     0,
+//     0,
+//     30,
+//     SCREEN_HEIGHT,
+//     0,
+//     SCREEN_WIDTH / 2,
+//     7,
+//     true,
+// );
 
-const secondScanner = scanner.getScanner(
+const firstScanner = scanner.createHScanner(0, 30, 0, SCREEN_WIDTH / 2, 7);
+
+const secondScanner = scanner.createScanner(
     SCREEN_WIDTH / 2,
     0,
     20,
@@ -28,7 +30,7 @@ const secondScanner = scanner.getScanner(
     true,
 );
 
-const thirdScanner = scanner.getScanner(
+const thirdScanner = scanner.createScanner(
     0,
     0,
     SCREEN_WIDTH,
@@ -46,9 +48,9 @@ function setup() {
 }
 
 function update() {
-    firstScanner.velocity = geometry.giveDirection(firstScanner);
-    secondScanner.velocity = geometry.giveDirection(secondScanner);
-    thirdScanner.velocity = geometry.giveDirection(thirdScanner);
+    firstScanner.velocity = geometry.updateVelocity(firstScanner);
+    secondScanner.velocity = geometry.updateVelocity(secondScanner);
+    thirdScanner.velocity = geometry.updateVelocity(thirdScanner);
 
     firstScanner.position.startX += firstScanner.velocity;
     secondScanner.position.startX += secondScanner.velocity;
@@ -108,7 +110,7 @@ function draw() {
     particle.drawParticleField(secondParticleField);
     particle.drawParticleField(thirdParticleField);
 
-    scanner.drawScanner(firstScanner);
+    scanner.drawHScanner(firstScanner);
     scanner.drawScanner(secondScanner);
     scanner.drawScanner(thirdScanner);
 

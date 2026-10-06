@@ -11,7 +11,7 @@ function isOutOfBound(scanner) {
     );
 }
 
-function giveDirection(scanner) {
+function updateVelocity(scanner) {
     return isOutOfBound(scanner) ? -scanner.velocity : scanner.velocity;
 }
 
@@ -38,5 +38,5 @@ module.exports = {
     isAnyOneOverlapping,
     areOverlapping,
     isOutOfBound,
-    giveDirection,
+    updateVelocity,
 };

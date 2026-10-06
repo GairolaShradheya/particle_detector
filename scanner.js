@@ -1,6 +1,6 @@
 const r = require("raylib");
 
-function getScanner(
+function createScanner(
     startX,
     startY,
     width,
@@ -28,7 +28,27 @@ function getScanner(
     };
 }
 
+function createHScanner(start, thickness, rangeStart, rangeEnd, velocity) {
+    return {
+        start: start,
+        thickness: thickness,
+        rangeStart: rangeStart,
+        rangeEnd: rangeEnd,
+        velocity: velocity,
+        horizontal: true,
+    };
+}
+
 function drawScanner(scanner) {
+    r.DrawRectangle(
+        scanner.position.startX,
+        scanner.position.startY,
+        scanner.size.width,
+        scanner.size.height,
+        scanner.colour,
+    );
+}
+function drawHScanner(scanner) {
     r.DrawRectangle(
         scanner.position.startX,
         scanner.position.startY,
@@ -39,6 +59,8 @@ function drawScanner(scanner) {
 }
 
 module.exports = {
-    getScanner,
+    createScanner,
     drawScanner,
+    createHScanner,
+    drawHScanner,
 };
