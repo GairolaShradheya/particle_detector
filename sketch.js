@@ -6,18 +6,16 @@ const particle = require("./particle");
 const SCREEN_WIDTH = 1700;
 const SCREEN_HEIGHT = 1000;
 
-// const firstScanner = scanner.createScanner(
-//     0,
-//     0,
-//     30,
-//     SCREEN_HEIGHT,
-//     0,
-//     SCREEN_WIDTH / 2,
-//     7,
-//     true,
-// );
-
-const firstScanner = scanner.createHScanner(0, 30, 0, SCREEN_WIDTH / 2, 7);
+const firstScanner = scanner.createScanner(
+    0,
+    0,
+    30,
+    SCREEN_HEIGHT,
+    0,
+    SCREEN_WIDTH / 2,
+    7,
+    true,
+);
 
 const secondScanner = scanner.createScanner(
     SCREEN_WIDTH / 2,
@@ -110,7 +108,7 @@ function draw() {
     particle.drawParticleField(secondParticleField);
     particle.drawParticleField(thirdParticleField);
 
-    scanner.drawHScanner(firstScanner);
+    scanner.drawScanner(firstScanner);
     scanner.drawScanner(secondScanner);
     scanner.drawScanner(thirdScanner);
 
