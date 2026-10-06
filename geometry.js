@@ -18,15 +18,9 @@ function updateVelocity(scanner) {
 function areOverlapping(field, scanner) {
     const fieldStart = field.horizontal ? field.startX : field.startY;
     const fieldWidth = field.horizontal ? field.width : field.height;
-    const scanStart = scanner.horizontal
-        ? scanner.position.startX
-        : scanner.position.startY;
-    const scanWidth = scanner.horizontal
-        ? scanner.size.width
-        : scanner.size.height;
     return !(
-        fieldStart - scanStart >= scanWidth ||
-        scanStart - fieldStart > fieldWidth
+        fieldStart - scanner.start >= scanner.thickness ||
+        scanner.start - fieldStart > fieldWidth
     );
 }
 
