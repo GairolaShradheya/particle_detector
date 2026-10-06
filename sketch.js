@@ -54,28 +54,10 @@ function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    const firstParticleField = particle.getParticle(
-        300,
-        0,
-        200,
-        geometry.SCREEN_HEIGHT,
-        true,
-    );
-    const secondParticleField = particle.getParticle(
-        1100,
-        0,
-        70,
-        geometry.SCREEN_HEIGHT,
-        true,
-    );
+    const firstParticleField = particle.getParticle(300, 200, true);
+    const secondParticleField = particle.getParticle(1100, 70, true);
 
-    const thirdParticleField = particle.getParticle(
-        0,
-        600,
-        geometry.SCREEN_WIDTH,
-        50,
-        false,
-    );
+    const thirdParticleField = particle.getParticle(600, 50, false);
 
     firstScanner.isOverlapping = geometry.isAnyOneOverlapping(
         firstParticleField,

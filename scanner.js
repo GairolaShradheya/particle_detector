@@ -1,6 +1,5 @@
 const r = require("raylib");
-const SCREEN_WIDTH = 1700;
-const SCREEN_HEIGHT = 1000;
+const geometry = require("./geometry");
 
 function createScanner(
     start,
@@ -28,8 +27,8 @@ function drawScanner(scanner) {
     r.DrawRectangle(
         scanner.horizontal ? scanner.start : 0,
         scanner.horizontal ? 0 : scanner.start,
-        scanner.horizontal ? scanner.thickness : SCREEN_WIDTH,
-        scanner.horizontal ? SCREEN_HEIGHT : scanner.thickness,
+        scanner.horizontal ? scanner.thickness : geometry.SCREEN_WIDTH,
+        scanner.horizontal ? geometry.SCREEN_HEIGHT : scanner.thickness,
         chooseColour(scanner.isOverlapping),
     );
 }

@@ -1,21 +1,20 @@
 const r = require("raylib");
+const geometry = require("./geometry");
 
-function getParticle(startX, startY, width, height, horizontal) {
+function getParticle(start, thickness, horizontal) {
     return {
-        startX: startX,
-        startY: startY,
-        width: width,
-        height: height,
+        start: start,
+        thickness: thickness,
         horizontal: horizontal,
     };
 }
 
 function drawParticleField(field) {
     r.DrawRectangle(
-        field.startX,
-        field.startY,
-        field.width,
-        field.height,
+        field.horizontal ? field.start : 0,
+        field.horizontal ? 0 : field.start,
+        field.horizontal ? field.thickness : geometry.SCREEN_WIDTH,
+        field.horizontal ? geometry.SCREEN_HEIGHT : field.thickness,
         r.BLUE,
     );
 }
